@@ -10,6 +10,19 @@ fn swap<T: Copy>(a: &mut T, b: &mut T) -> () {
     *b = temp;
 }
 
+struct Person {
+    age: u32,
+    sex: bool,
+    name: String,
+}
+
+impl Person {
+    /// 更新方法
+    fn grow(&mut self) {
+        self.age += 1
+    }
+}
+
 fn main() {
     println!("Hello, world!");
 
@@ -25,5 +38,31 @@ fn main() {
         swap(&mut a, &mut b);
         assert_eq!(a, 2);
         assert_eq!(b, 1);
+    }
+
+    {
+        // 都要初始化
+        // 順序無關
+        let mut tom = Person {
+            age: 18,
+            sex: true,
+            name: String::from("Tom"),
+        };
+
+        assert_eq!(tom.age, 18);
+        assert_eq!(tom.sex, true);
+        assert_eq!(tom.name, String::from("Tom"));
+
+        // 更新語法
+        tom = Person {
+            age: 19,
+            ..tom
+        };
+
+        assert_eq!(tom.age, 19);
+
+        // 原地更新
+        tom.grow();
+        assert_eq!(tom.age, 20);
     }
 }
