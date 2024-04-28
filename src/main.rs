@@ -40,6 +40,10 @@ fn take_and_give_ownship(str: String) -> String {
     str
 }
 
+fn get_array_item(a: &[i32], index: usize) -> i32 {
+    a[index]
+}
+
 fn main() {
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
     log::info!("Hello, world!");
@@ -106,5 +110,24 @@ fn main() {
         // 原地更新
         tom.grow();
         assert_eq!(tom.age, 20);
+    }
+
+    {
+        let a = [1, 2, 3, 4, 5];
+        log::info!("{}", a[0]);
+        log::info!("{}", a.len());
+        let sa = &a[1..3];
+        for i in a {
+            print!("{} ", i);
+        }
+        print!("\n");
+        log::info!("");
+        for i in sa {
+            print!("{} ", i);
+        }
+        print!("\n");
+        log::info!("");
+
+        assert_eq!(get_array_item(&a[0..], 0), 1);
     }
 }
