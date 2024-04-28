@@ -1,3 +1,7 @@
+use log;
+
+use log4rs;
+
 /// 修改參數
 fn set_value<T>(num: &mut T, value: T) -> () {
     *num = value;
@@ -23,8 +27,46 @@ impl Person {
     }
 }
 
+fn give_ownship() -> String {
+    String::from("str")
+}
+
+fn take_ownship(str: String) {
+    log::info!("take_ownship: {}", str);
+}
+
+fn take_and_give_ownship(str: String) -> String {
+    log::info!("take_and_give_ownship: {}", str);
+    str
+}
+
 fn main() {
-    println!("Hello, world!");
+    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
+    log::info!("Hello, world!");
+
+    {
+        // 不可變引用
+        let i = 2;
+        let r = &i;
+        assert_eq!(*r, 2);
+
+        // 可變引用
+        let mut c = 3;
+        let rc = &mut c;
+        *rc += 1;
+        assert_eq!(*rc, 4);
+    }
+
+    {
+        let str1 = give_ownship();
+        log::info!("{str1}");
+        take_ownship(str1); // 被移走了
+        // log::info!("{str}"); // 無法編譯
+
+        let mut str2 = give_ownship();
+        str2 = take_and_give_ownship(str2); // 用完再移回來
+        log::info!("{str2}"); // 可以編譯
+    }
 
     {
         let mut i = 2;
