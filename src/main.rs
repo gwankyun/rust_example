@@ -44,6 +44,11 @@ fn get_array_item(a: &[i32], index: usize) -> i32 {
     a[index]
 }
 
+fn print_info() {
+    println!("file: {}", file!());
+    println!("line: {}", line!());
+}
+
 fn main() {
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
     log::info!("Hello, world!");
@@ -130,4 +135,6 @@ fn main() {
 
         assert_eq!(get_array_item(&a[0..], 0), 1);
     }
+
+    print_info();
 }
