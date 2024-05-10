@@ -49,6 +49,46 @@ fn print_info() {
     println!("line: {}", line!());
 }
 
+fn array_example()
+{
+    let a = [1, 2, 3, 4, 5];
+    log::info!("{}", a[0]);
+    log::info!("{}", a.len());
+    let sa = &a[1..3];
+    for i in a {
+        print!("{} ", i);
+    }
+    print!("\n");
+    log::info!("");
+    for i in sa {
+        print!("{} ", i);
+    }
+    print!("\n");
+    log::info!("");
+
+    assert_eq!(get_array_item(&a[0..], 0), 1);
+}
+
+fn vec_example()
+{
+    let mut v: Vec<i32> = Vec::new();
+    v.push(1);
+    v.push(2);
+    v.push(3);
+
+    assert_eq!(v[0], 1);
+
+    {
+        let mut v = vec![1, 2, 3];
+        assert_eq!(v.len(), 3);
+        v.push(4);
+        assert_eq!(v.len(), 4);
+        assert_eq!(v[3], 4);
+        v.pop();
+        assert_eq!(v.len(), 3);
+    }
+}
+
 fn main() {
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
     log::info!("Hello, world!");
@@ -117,24 +157,10 @@ fn main() {
         assert_eq!(tom.age, 20);
     }
 
-    {
-        let a = [1, 2, 3, 4, 5];
-        log::info!("{}", a[0]);
-        log::info!("{}", a.len());
-        let sa = &a[1..3];
-        for i in a {
-            print!("{} ", i);
-        }
-        print!("\n");
-        log::info!("");
-        for i in sa {
-            print!("{} ", i);
-        }
-        print!("\n");
-        log::info!("");
-
-        assert_eq!(get_array_item(&a[0..], 0), 1);
-    }
+    // 數組
+    array_example();
 
     print_info();
+
+    vec_example();
 }
