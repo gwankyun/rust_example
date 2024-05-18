@@ -1,4 +1,5 @@
 use log;
+use std::collections::HashMap;
 
 use log4rs;
 
@@ -72,7 +73,7 @@ fn array_example()
 fn vec_example()
 {
     let mut v: Vec<i32> = Vec::new();
-    v.push(1);
+    v.push(1); // 增加
     v.push(2);
     v.push(3);
 
@@ -84,9 +85,63 @@ fn vec_example()
         v.push(4);
         assert_eq!(v.len(), 4);
         assert_eq!(v[3], 4);
-        v.pop();
+        v.pop(); // 移除
         assert_eq!(v.len(), 3);
     }
+}
+
+fn struct_example() {
+    // 都要初始化
+    // 順序無關
+    let mut tom = Person {
+        age: 18,
+        sex: true,
+        name: String::from("Tom"),
+    };
+
+    assert_eq!(tom.age, 18);
+    assert_eq!(tom.sex, true);
+    assert_eq!(tom.name, String::from("Tom"));
+
+    // 更新語法
+    tom = Person {
+        age: 19,
+        ..tom
+    };
+
+    assert_eq!(tom.age, 19);
+
+    // 原地更新
+    tom.grow();
+    assert_eq!(tom.age, 20);
+}
+
+fn hash_map_example() {
+    let mut m = HashMap::new();
+
+    m.insert("a", 1);
+    m.insert("b", 2);
+    m.insert("c", 3);
+
+    assert_eq!(m.len(), 3);
+
+    let a = m.get("a");
+    match a {
+        None => {
+            ();
+        }
+        Some(i) => {
+            log::info!("{}", i);
+        }
+    }
+}
+
+fn add<T: Copy + std::ops::Add<Output = T>>(a: T, b: T) -> T {
+    a + b
+}
+
+fn generic_example() {
+    assert_eq!(add(1, 2), 3);
 }
 
 fn main() {
@@ -131,31 +186,7 @@ fn main() {
         assert_eq!(b, 1);
     }
 
-    {
-        // 都要初始化
-        // 順序無關
-        let mut tom = Person {
-            age: 18,
-            sex: true,
-            name: String::from("Tom"),
-        };
-
-        assert_eq!(tom.age, 18);
-        assert_eq!(tom.sex, true);
-        assert_eq!(tom.name, String::from("Tom"));
-
-        // 更新語法
-        tom = Person {
-            age: 19,
-            ..tom
-        };
-
-        assert_eq!(tom.age, 19);
-
-        // 原地更新
-        tom.grow();
-        assert_eq!(tom.age, 20);
-    }
+    struct_example();
 
     // 數組
     array_example();
@@ -163,4 +194,8 @@ fn main() {
     print_info();
 
     vec_example();
+
+    hash_map_example();
+
+    generic_example();
 }
