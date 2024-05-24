@@ -144,39 +144,34 @@ fn generic_example() {
     assert_eq!(add(1, 2), 3);
 }
 
-fn main() {
-    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
-    log::info!("Hello, world!");
+fn ownship_example() {
+    let str1 = give_ownship();
+    log::info!("{str1}");
+    take_ownship(str1); // 被移走了
+    // log::info!("{str}"); // 無法編譯
 
-    {
-        // 不可變引用
-        let i = 2;
-        let r = &i;
-        assert_eq!(*r, 2);
+    let mut str2 = give_ownship();
+    str2 = take_and_give_ownship(str2); // 用完再移回來
+    log::info!("{str2}"); // 可以編譯
+}
 
-        // 可變引用
-        let mut c = 3;
-        let rc = &mut c;
-        *rc += 1;
-        assert_eq!(*rc, 4);
-    }
+fn ref_example() {
+    // 不可變引用
+    let i = 2;
+    let r = &i;
+    assert_eq!(*r, 2);
 
-    {
-        let str1 = give_ownship();
-        log::info!("{str1}");
-        take_ownship(str1); // 被移走了
-        // log::info!("{str}"); // 無法編譯
+    // 可變引用
+    let mut c = 3;
+    let rc = &mut c;
+    *rc += 1;
+    assert_eq!(*rc, 4);
+}
 
-        let mut str2 = give_ownship();
-        str2 = take_and_give_ownship(str2); // 用完再移回來
-        log::info!("{str2}"); // 可以編譯
-    }
-
-    {
-        let mut i = 2;
-        set_value(&mut i, 0);
-        assert_eq!(i, 0);
-    }
+fn mut_example() {
+    let mut i = 2;
+    set_value(&mut i, 0);
+    assert_eq!(i, 0);
 
     {
         let mut a: i32 = 1;
@@ -185,17 +180,20 @@ fn main() {
         assert_eq!(a, 2);
         assert_eq!(b, 1);
     }
+}
 
+fn main() {
+    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
+    log::info!("Hello, world!");
+
+    ref_example();
+    ownship_example();
+    mut_example();
     struct_example();
-
     // 數組
     array_example();
-
     print_info();
-
     vec_example();
-
     hash_map_example();
-
     generic_example();
 }
