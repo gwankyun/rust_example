@@ -182,6 +182,18 @@ fn mut_example() {
     }
 }
 
+fn string_examle() {
+    let s = String::from("hello world");
+    let hello = &s[0..5];
+    let world = &s[6..11];
+    log::info!("{hello}");
+    log::info!("{world}");
+
+    let str = String::from("012345");
+    let str012 = &str[0..3]; // [0..3)
+    log::info!("{str012}");
+}
+
 fn main() {
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
     log::info!("Hello, world!");
@@ -196,4 +208,5 @@ fn main() {
     vec_example();
     hash_map_example();
     generic_example();
+    string_examle();
 }
