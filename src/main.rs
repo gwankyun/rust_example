@@ -192,6 +192,20 @@ fn string_examle() {
     let str = String::from("012345");
     let str012 = &str[0..3]; // [0..3)
     log::info!("{str012}");
+
+    {
+        let str = "123".to_string();
+        log::info!("{str}");
+    }
+
+    {
+        let mut str = String::from("");
+        assert_eq!(str, "");
+        str.push_str("123");
+        assert_eq!(str, "123");
+        str += "456";
+        assert_eq!(str, "123456");
+    }
 }
 
 fn main() {
