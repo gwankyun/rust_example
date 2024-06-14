@@ -205,7 +205,35 @@ fn string_examle() {
         assert_eq!(str, "123");
         str += "456";
         assert_eq!(str, "123456");
+        // 插入字符串
+        str.insert_str(1, "0");
+        assert_eq!(str, "1023456");
     }
+}
+
+fn tuple_example() {
+    let tup: (i32, String) = (18, String::from("Tom"));
+    assert_eq!(tup.0, 18);
+    assert_eq!(tup.1, "Tom")
+}
+
+#[derive(Debug)]
+#[derive(PartialEq)]
+enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
+fn enum_example() {
+    let mut c = Color::Red;
+    println!("{:?}", c);
+    assert_eq!(c, Color::Red);
+    c = Color::Blue;
+    assert_eq!(c, Color::Blue);
+    c = Color::Green;
+    println!("{:?}", c);
+    assert_eq!(c, Color::Green);
 }
 
 fn main() {
@@ -223,4 +251,6 @@ fn main() {
     hash_map_example();
     generic_example();
     string_examle();
+    tuple_example();
+    enum_example();
 }
