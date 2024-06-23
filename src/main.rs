@@ -1,5 +1,6 @@
 use log;
 use std::collections::HashMap;
+// use test_mod;
 
 use log4rs;
 
@@ -236,6 +237,13 @@ fn enum_example() {
     assert_eq!(c, Color::Green);
 }
 
+pub mod test_mod {
+    pub fn hello() -> String {
+        println!("test");
+        String::from("test")
+    }
+}
+
 fn main() {
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
     log::info!("Hello, world!");
@@ -253,4 +261,5 @@ fn main() {
     string_examle();
     tuple_example();
     enum_example();
+    assert_eq!(test_mod::hello(), "test");
 }
