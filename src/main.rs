@@ -47,8 +47,8 @@ fn get_array_item(a: &[i32], index: usize) -> i32 {
 }
 
 fn print_info() {
-    println!("file: {}", file!());
-    println!("line: {}", line!());
+    log::info!("file: {}", file!()); // 相對文件名
+    log::info!("line: {}", line!()); // 行號
 }
 
 fn array_example()
@@ -228,24 +228,52 @@ enum Color {
 
 fn enum_example() {
     let mut c = Color::Red;
-    println!("{:?}", c);
+    log::info!("{:?}", c);
     assert_eq!(c, Color::Red);
     c = Color::Blue;
     assert_eq!(c, Color::Blue);
     c = Color::Green;
-    println!("{:?}", c);
+    log::info!("{:?}", c);
     assert_eq!(c, Color::Green);
 }
 
 pub mod test_mod {
     pub fn hello() -> String {
-        println!("test");
+        log::info!("test");
         String::from("test")
     }
 }
 
+fn flow_control_example() {
+    // 選擇語句
+    let c = true;
+    if c {
+        log::info!("yes");
+    } else {
+        log::info!("no");
+    };
+    // 可用作表達式
+    let s = if c {
+        String::from("yes")
+    } else {
+        String::from("no")
+    };
+    assert_eq!(s, "yes");
+    // for in
+    {
+        let mut sum = 0;
+        let a = [1, 2, 3, 4];
+        for i in &a {
+            sum += i;
+        }
+        assert_eq!(sum, 10);
+    }
+}
+
 fn main() {
-    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file(
+        "config/log4rs.yaml",
+        Default::default()).unwrap();
     log::info!("Hello, world!");
 
     ref_example();
@@ -262,4 +290,5 @@ fn main() {
     tuple_example();
     enum_example();
     assert_eq!(test_mod::hello(), "test");
+    flow_control_example();
 }
