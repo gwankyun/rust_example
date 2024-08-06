@@ -1,6 +1,9 @@
 use log;
 use std::collections::HashMap;
 // use test_mod;
+use std::fs;
+use std::env;
+// use std::io;
 
 use log4rs;
 
@@ -291,4 +294,12 @@ fn main() {
     enum_example();
     assert_eq!(test_mod::hello(), "test");
     flow_control_example();
+
+    // 當前目錄
+    let current_dir = env::current_dir().unwrap();
+    log::info!("current_dir: {:?}", current_dir);
+
+    // 讀取文件
+    let text = fs::read_to_string("test.txt").unwrap();
+    log::info!("text: {:?}", text);
 }
