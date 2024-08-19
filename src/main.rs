@@ -1,6 +1,6 @@
 use log;
+use rust_example::test_mod;
 use std::collections::HashMap;
-// use test_mod;
 use std::fs;
 use std::env;
 use std::io::Write;
@@ -241,13 +241,6 @@ fn enum_example() {
     assert_eq!(c, Color::Green);
 }
 
-pub mod test_mod {
-    pub fn hello() -> String {
-        log::info!("test");
-        String::from("test")
-    }
-}
-
 fn flow_control_example() {
     // 選擇語句
     let c = true;
@@ -310,4 +303,8 @@ fn main() {
 
     // 寫入文件
     file.write_all("123".as_bytes()).unwrap();
+
+    // test_mod::hello();
+    test_mod::hello();
+    // test_mod.u
 }
