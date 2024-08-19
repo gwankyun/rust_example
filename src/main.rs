@@ -3,6 +3,7 @@ use std::collections::HashMap;
 // use test_mod;
 use std::fs;
 use std::env;
+use std::io::Write;
 // use std::io;
 
 use log4rs;
@@ -302,4 +303,11 @@ fn main() {
     // 讀取文件
     let text = fs::read_to_string("test.txt").unwrap();
     log::info!("text: {:?}", text);
+
+    // 創建文件
+    let mut file = std::fs::File::create("data.txt").unwrap();
+    log::info!("file: {:?}", file);
+
+    // 寫入文件
+    file.write_all("123".as_bytes()).unwrap();
 }
