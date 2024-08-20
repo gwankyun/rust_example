@@ -267,6 +267,31 @@ fn flow_control_example() {
     }
 }
 
+/// 文件讀寫
+fn file_example() {
+    // 讀取文件
+    let text = fs::read_to_string("test.txt").unwrap();
+    log::info!("text: {:?}", text);
+
+    // 創建文件
+    let mut file = std::fs::File::create("data.txt").unwrap();
+    log::info!("file: {:?}", file);
+
+    // 寫入文件
+    file.write_all("123".as_bytes()).unwrap();
+
+    let dest = "copy.txt"; 
+
+    // 複製
+    fs::copy("data.txt", dest).unwrap();
+    log::info!("copy: {:?}", fs::read_to_string("copy.txt"));
+
+    // 刪除
+    if fs::metadata(dest).is_ok() {
+        fs::remove_file(dest).unwrap();
+    }
+}
+
 fn main() {
     log4rs::init_file(
         "config/log4rs.yaml",
@@ -293,18 +318,7 @@ fn main() {
     let current_dir = env::current_dir().unwrap();
     log::info!("current_dir: {:?}", current_dir);
 
-    // 讀取文件
-    let text = fs::read_to_string("test.txt").unwrap();
-    log::info!("text: {:?}", text);
+    file_example();
 
-    // 創建文件
-    let mut file = std::fs::File::create("data.txt").unwrap();
-    log::info!("file: {:?}", file);
-
-    // 寫入文件
-    file.write_all("123".as_bytes()).unwrap();
-
-    // test_mod::hello();
     test_mod::hello();
-    // test_mod.u
 }
