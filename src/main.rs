@@ -292,6 +292,15 @@ fn file_example() {
     }
 }
 
+/// 生命週期標注
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
 fn main() {
     log4rs::init_file(
         "config/log4rs.yaml",
@@ -321,4 +330,6 @@ fn main() {
     file_example();
 
     test_mod::hello();
+
+    log::info!("longest: {:?}", longest("12", "123"));
 }
