@@ -1,6 +1,8 @@
 use log;
+use rust_example::collections_example;
 use rust_example::test_mod;
 use std::collections::HashMap;
+use std::collections::VecDeque;
 use std::fs;
 use std::env;
 use std::io::Write;
@@ -46,53 +48,9 @@ fn take_and_give_ownship(str: String) -> String {
     str
 }
 
-fn get_array_item(a: &[i32], index: usize) -> i32 {
-    a[index]
-}
-
 fn print_info() {
     log::info!("file: {}", file!()); // 相對文件名
     log::info!("line: {}", line!()); // 行號
-}
-
-fn array_example()
-{
-    let a = [1, 2, 3, 4, 5];
-    log::info!("{}", a[0]);
-    log::info!("{}", a.len());
-    let sa = &a[1..3];
-    for i in a {
-        print!("{} ", i);
-    }
-    print!("\n");
-    log::info!("");
-    for i in sa {
-        print!("{} ", i);
-    }
-    print!("\n");
-    log::info!("");
-
-    assert_eq!(get_array_item(&a[0..], 0), 1);
-}
-
-fn vec_example()
-{
-    let mut v: Vec<i32> = Vec::new();
-    v.push(1); // 增加
-    v.push(2);
-    v.push(3);
-
-    assert_eq!(v[0], 1);
-
-    {
-        let mut v = vec![1, 2, 3];
-        assert_eq!(v.len(), 3);
-        v.push(4);
-        assert_eq!(v.len(), 4);
-        assert_eq!(v[3], 4);
-        v.pop(); // 移除
-        assert_eq!(v.len(), 3);
-    }
 }
 
 fn struct_example() {
@@ -119,26 +77,6 @@ fn struct_example() {
     // 原地更新
     tom.grow();
     assert_eq!(tom.age, 20);
-}
-
-fn hash_map_example() {
-    let mut m = HashMap::new();
-
-    m.insert("a", 1);
-    m.insert("b", 2);
-    m.insert("c", 3);
-
-    assert_eq!(m.len(), 3);
-
-    let a = m.get("a");
-    match a {
-        None => {
-            ();
-        }
-        Some(i) => {
-            log::info!("{}", i);
-        }
-    }
 }
 
 fn add<T: Copy + std::ops::Add<Output = T>>(a: T, b: T) -> T {
@@ -301,6 +239,99 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     }
 }
 
+// #[derive(Clone, Copy)]
+// struct Node<T> {
+//     value: T,
+//     left: Option<usize>,
+//     right: Option<usize>,
+// }
+
+// #[derive(Debug)]
+// #[derive(PartialEq)]
+// enum Side {
+//     Left,
+//     Right,
+// }
+
+// struct Tree<T> {
+//     root: Option<usize>,
+//     node_contain: Vec<Node<T>>,
+//     empty_node: VecDeque<usize>,
+// }
+
+// impl<T> Tree<T> {
+//     fn new() -> Self {
+//         Self {
+//             root: None,
+//             node_contain: Vec::with_capacity(8),
+//             empty_node: VecDeque::from([0]),
+//         }
+//     }
+
+//     fn with_root(&mut self, value: T) -> &Node<T> {
+//         let root = self.empty_node.pop_back().unwrap();
+//         self.node_contain[root] = Node {
+//             value,
+//             left: None,
+//             right: None,
+//         };
+//         self.root = Some(root);
+//         self.empty_node.push_back(root + 1);
+//         &self.node_contain[0]
+//     }
+
+//     fn get_root(&self) -> Node<T> {
+//         self.node_contain[0]
+//     }
+
+//     fn insert(&mut self, node: Node<T>, side: Side, value: T) -> Node<T> {
+//         let index = self.empty_node.pop_front().unwrap();
+//         match side {
+//             Side::Left => {
+//                 self.node_contain[index] = Node {
+//                     value,
+//                     left: node.left,
+//                     right: None,
+//                 };
+//                 self.empty_node.push_back(index + 1);
+//                 // node.left = Some(index);
+//                 Node {
+//                     left: Some(index),
+//                     ..node
+//                 }
+//             }
+//             Side::Right => {
+//                 self.node_contain[index] = Node {
+//                     value,
+//                     left: None,
+//                     right: node.right,
+//                 };
+//                 self.empty_node.push_back(index + 1);
+//                 // node.right = Some(index);
+//                 Node {
+//                     right: Some(index),
+//                     ..node
+//                 }
+//             }
+//         }
+//         // self.empty_node.push_back(index + 1);
+//         // node.clone()
+//         // node with
+//     }
+// }
+
+// fn tree_example() {
+//     let mut tree = Tree::<i32>::new();
+//     {
+//         tree.with_root(1);
+//     }
+//     {
+//         // let root = tree.node_contain.get_mut(0).unwrap();
+//         let root = tree.get_root();
+//         tree.insert(root, Side::Left, 2);
+//     }
+// }
+
 fn main() {
     log4rs::init_file(
         "config/log4rs.yaml",
@@ -308,14 +339,16 @@ fn main() {
     log::info!("Hello, world!");
 
     ref_example();
+    // 所有權
     ownship_example();
     mut_example();
+    // 結構體
     struct_example();
     // 數組
-    array_example();
+    collections_example::array();
     print_info();
-    vec_example();
-    hash_map_example();
+    collections_example::vec();
+    collections_example::hash_map();
     generic_example();
     string_examle();
     tuple_example();
