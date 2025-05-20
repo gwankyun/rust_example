@@ -1,8 +1,8 @@
 use log;
 use rust_example::collections_example;
 use rust_example::test_mod;
-use std::collections::HashMap;
-use std::collections::VecDeque;
+// use std::collections::HashMap;
+// use std::collections::VecDeque;
 use std::fs;
 use std::env;
 use std::io::Write;
@@ -11,12 +11,12 @@ use std::io::Write;
 use log4rs;
 
 /// 修改參數
-fn set_value<T>(num: &mut T, value: T) -> () {
+pub fn set_value<T>(num: &mut T, value: T) -> () {
     *num = value;
 }
 
 /// 交換參數
-fn swap<T: Copy>(a: &mut T, b: &mut T) -> () {
+pub fn swap<T: Copy>(a: &mut T, b: &mut T) -> () {
     let temp = *a;
     *a = *b;
     *b = temp;
@@ -35,14 +35,17 @@ impl Person {
     }
 }
 
+#[warn(dead_code)]
 fn give_ownship() -> String {
     String::from("str")
 }
 
+#[warn(dead_code)]
 fn take_ownship(str: String) {
     log::info!("take_ownship: {}", str);
 }
 
+#[warn(dead_code)]
 fn take_and_give_ownship(str: String) -> String {
     log::info!("take_and_give_ownship: {}", str);
     str
@@ -85,44 +88,6 @@ fn add<T: Copy + std::ops::Add<Output = T>>(a: T, b: T) -> T {
 
 fn generic_example() {
     assert_eq!(add(1, 2), 3);
-}
-
-fn ownship_example() {
-    let str1 = give_ownship();
-    log::info!("{str1}");
-    take_ownship(str1); // 被移走了
-    // log::info!("{str}"); // 無法編譯
-
-    let mut str2 = give_ownship();
-    str2 = take_and_give_ownship(str2); // 用完再移回來
-    log::info!("{str2}"); // 可以編譯
-}
-
-fn ref_example() {
-    // 不可變引用
-    let i = 2;
-    let r = &i;
-    assert_eq!(*r, 2);
-
-    // 可變引用
-    let mut c = 3;
-    let rc = &mut c;
-    *rc += 1;
-    assert_eq!(*rc, 4);
-}
-
-fn mut_example() {
-    let mut i = 2;
-    set_value(&mut i, 0);
-    assert_eq!(i, 0);
-
-    {
-        let mut a: i32 = 1;
-        let mut b: i32 = 2;
-        swap(&mut a, &mut b);
-        assert_eq!(a, 2);
-        assert_eq!(b, 1);
-    }
 }
 
 fn string_examle() {
@@ -239,6 +204,24 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     }
 }
 
+// mod list {
+//     use super::*;
+
+//     #[derive(Clone, Copy)]
+//     struct Node<T> {
+//         value: T,
+//         left: Option<usize>,
+//         right: Option<usize>,
+//     }
+
+//     struct List<T> {
+//         head: Option<usize>,
+//         tail: Option<usize>,
+//         node_contain: Vec<Node<T>>,
+//         empty_node: VecDeque<usize>,
+//     }
+// }
+
 // #[derive(Clone, Copy)]
 // struct Node<T> {
 //     value: T,
@@ -332,23 +315,81 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 //     }
 // }
 
+// #[cfg!(test)]
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn it_works() {
+        let result = 2 + 2;
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    fn ref_works() {
+        // 不可變引用
+        let i = 2;
+        let r = &i;
+        assert_eq!(*r, 2);
+
+        // 可變引用
+        let mut c = 3;
+        let rc = &mut c;
+        *rc += 1;
+        assert_eq!(*rc, 4);
+    }
+
+    /// 可變
+    #[test]
+    fn mut_example() {
+        let mut i = 2;
+        set_value(&mut i, 0);
+        assert_eq!(i, 0);
+
+        {
+            let mut a: i32 = 1;
+            let mut b: i32 = 2;
+            swap(&mut a, &mut b);
+            assert_eq!(a, 2);
+            assert_eq!(b, 1);
+        }
+    }
+
+    /// 所有權
+    #[test]
+    fn ownship_example() {
+        let str1 = give_ownship();
+        log::info!("{str1}");
+        take_ownship(str1); // 被移走了
+        // log::info!("{str}"); // 無法編譯
+
+        let mut str2 = give_ownship();
+        str2 = take_and_give_ownship(str2); // 用完再移回來
+        log::info!("{str2}"); // 可以編譯
+    }
+
+    #[test]
+    fn box_example() {
+        let b = Box::new(5);
+        assert_eq!(*b, 5);
+
+        let mut a = Box::new([0;100]);
+        a[0] = 1;
+        assert_eq!(a[0], 1);
+    }
+}
+
 fn main() {
     log4rs::init_file(
         "config/log4rs.yaml",
         Default::default()).unwrap();
     log::info!("Hello, world!");
 
-    ref_example();
-    // 所有權
-    ownship_example();
-    mut_example();
     // 結構體
     struct_example();
-    // 數組
-    collections_example::array();
     print_info();
-    collections_example::vec();
-    collections_example::hash_map();
+    // collections_example::vec();
+    // collections_example::hash_map();
     generic_example();
     string_examle();
     tuple_example();
