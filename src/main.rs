@@ -1,5 +1,5 @@
 use log;
-use rust_example::collections_example;
+// use rust_example::collections_example;
 use rust_example::test_mod;
 // use std::collections::HashMap;
 // use std::collections::VecDeque;
@@ -35,17 +35,17 @@ impl Person {
     }
 }
 
-#[warn(dead_code)]
+#[cfg(test)]
 fn give_ownship() -> String {
     String::from("str")
 }
 
-#[warn(dead_code)]
+#[cfg(test)]
 fn take_ownship(str: String) {
     log::info!("take_ownship: {}", str);
 }
 
-#[warn(dead_code)]
+#[cfg(test)]
 fn take_and_give_ownship(str: String) -> String {
     log::info!("take_and_give_ownship: {}", str);
     str
@@ -183,7 +183,7 @@ fn file_example() {
     // 寫入文件
     file.write_all("123".as_bytes()).unwrap();
 
-    let dest = "copy.txt"; 
+    let dest = "copy.txt";
 
     // 複製
     fs::copy("data.txt", dest).unwrap();
@@ -315,7 +315,6 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 //     }
 // }
 
-// #[cfg!(test)]
 #[cfg(test)]
 mod tests {
     use super::*;

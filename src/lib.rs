@@ -9,7 +9,7 @@ pub mod collections_example {
     // use std::collections::HashMap;
     // use std::collections::VecDeque;
 
-    #[warn(dead_code)]
+    #[cfg(test)]
     fn get_array_item(a: &[i32], index: usize) -> i32 {
         a[index]
     }
