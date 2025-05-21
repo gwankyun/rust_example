@@ -22,6 +22,7 @@ pub fn swap<T: Copy>(a: &mut T, b: &mut T) -> () {
     *b = temp;
 }
 
+#[allow(dead_code)]
 struct Person {
     age: u32,
     sex: bool,
@@ -30,6 +31,7 @@ struct Person {
 
 impl Person {
     /// 更新方法
+    #[cfg(test)]
     fn grow(&mut self) {
         self.age += 1
     }
@@ -56,31 +58,6 @@ fn print_info() {
     log::info!("line: {}", line!()); // 行號
 }
 
-fn struct_example() {
-    // 都要初始化
-    // 順序無關
-    let mut tom = Person {
-        age: 18,
-        sex: true,
-        name: String::from("Tom"),
-    };
-
-    assert_eq!(tom.age, 18);
-    assert_eq!(tom.sex, true);
-    assert_eq!(tom.name, String::from("Tom"));
-
-    // 更新語法
-    tom = Person {
-        age: 19,
-        ..tom
-    };
-
-    assert_eq!(tom.age, 19);
-
-    // 原地更新
-    tom.grow();
-    assert_eq!(tom.age, 20);
-}
 
 fn add<T: Copy + std::ops::Add<Output = T>>(a: T, b: T) -> T {
     a + b
@@ -354,6 +331,39 @@ mod tests {
         }
     }
 
+    #[test]
+    fn loop_example() {
+        let mut i = 1;
+        let mut sum = 0;
+        loop {
+            if i >= 6 {
+                break;
+            }
+            sum += i;
+            i += 1;
+        }
+        assert_eq!(sum, 15);
+    }
+
+    #[test]
+    fn while_example() {
+        let mut n = 3;
+        while n != 0 {
+            n -= 1;
+        }
+        assert_eq!(n, 0);
+    }
+
+    #[test]
+    fn for_example() {
+        let a = [1, 2, 3, 4, 5];
+        let mut sum = 0;
+        for i in &a {
+            sum += i;
+        }
+        assert_eq!(sum, 15);
+    }
+
     /// 所有權
     #[test]
     fn ownship_example() {
@@ -366,6 +376,37 @@ mod tests {
         str2 = take_and_give_ownship(str2); // 用完再移回來
         log::info!("{str2}"); // 可以編譯
     }
+
+    #[test]
+    fn struct_example() {
+        // 都要初始化
+        // 順序無關
+        let mut tom = Person {
+            age: 18,
+            sex: true,
+            name: String::from("Tom"),
+        };
+
+        assert_eq!(tom.age, 18);
+        assert_eq!(tom.sex, true);
+        assert_eq!(tom.name, String::from("Tom"));
+
+        // 更新語法
+        tom = Person {
+            age: 19,
+            ..tom
+        };
+
+        assert_eq!(tom.age, 19);
+
+        // 原地更新
+        tom.grow();
+        assert_eq!(tom.age, 20);
+    }
+
+    // #[test]
+    // fn lifetime_example() {
+    // }
 
     #[test]
     fn box_example() {
@@ -384,11 +425,7 @@ fn main() {
         Default::default()).unwrap();
     log::info!("Hello, world!");
 
-    // 結構體
-    struct_example();
     print_info();
-    // collections_example::vec();
-    // collections_example::hash_map();
     generic_example();
     string_examle();
     tuple_example();

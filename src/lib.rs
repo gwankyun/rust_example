@@ -36,6 +36,9 @@ pub mod collections_example {
             log::info!("");
 
             assert_eq!(get_array_item(&a[0..], 0), 1);
+
+            let a = [3; 5];
+            assert_eq!(a, [3, 3, 3, 3, 3]);
         }
 
         #[test]
