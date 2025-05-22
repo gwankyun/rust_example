@@ -181,117 +181,6 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     }
 }
 
-// mod list {
-//     use super::*;
-
-//     #[derive(Clone, Copy)]
-//     struct Node<T> {
-//         value: T,
-//         left: Option<usize>,
-//         right: Option<usize>,
-//     }
-
-//     struct List<T> {
-//         head: Option<usize>,
-//         tail: Option<usize>,
-//         node_contain: Vec<Node<T>>,
-//         empty_node: VecDeque<usize>,
-//     }
-// }
-
-// #[derive(Clone, Copy)]
-// struct Node<T> {
-//     value: T,
-//     left: Option<usize>,
-//     right: Option<usize>,
-// }
-
-// #[derive(Debug)]
-// #[derive(PartialEq)]
-// enum Side {
-//     Left,
-//     Right,
-// }
-
-// struct Tree<T> {
-//     root: Option<usize>,
-//     node_contain: Vec<Node<T>>,
-//     empty_node: VecDeque<usize>,
-// }
-
-// impl<T> Tree<T> {
-//     fn new() -> Self {
-//         Self {
-//             root: None,
-//             node_contain: Vec::with_capacity(8),
-//             empty_node: VecDeque::from([0]),
-//         }
-//     }
-
-//     fn with_root(&mut self, value: T) -> &Node<T> {
-//         let root = self.empty_node.pop_back().unwrap();
-//         self.node_contain[root] = Node {
-//             value,
-//             left: None,
-//             right: None,
-//         };
-//         self.root = Some(root);
-//         self.empty_node.push_back(root + 1);
-//         &self.node_contain[0]
-//     }
-
-//     fn get_root(&self) -> Node<T> {
-//         self.node_contain[0]
-//     }
-
-//     fn insert(&mut self, node: Node<T>, side: Side, value: T) -> Node<T> {
-//         let index = self.empty_node.pop_front().unwrap();
-//         match side {
-//             Side::Left => {
-//                 self.node_contain[index] = Node {
-//                     value,
-//                     left: node.left,
-//                     right: None,
-//                 };
-//                 self.empty_node.push_back(index + 1);
-//                 // node.left = Some(index);
-//                 Node {
-//                     left: Some(index),
-//                     ..node
-//                 }
-//             }
-//             Side::Right => {
-//                 self.node_contain[index] = Node {
-//                     value,
-//                     left: None,
-//                     right: node.right,
-//                 };
-//                 self.empty_node.push_back(index + 1);
-//                 // node.right = Some(index);
-//                 Node {
-//                     right: Some(index),
-//                     ..node
-//                 }
-//             }
-//         }
-//         // self.empty_node.push_back(index + 1);
-//         // node.clone()
-//         // node with
-//     }
-// }
-
-// fn tree_example() {
-//     let mut tree = Tree::<i32>::new();
-//     {
-//         tree.with_root(1);
-//     }
-//     {
-//         // let root = tree.node_contain.get_mut(0).unwrap();
-//         let root = tree.get_root();
-//         tree.insert(root, Side::Left, 2);
-//     }
-// }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -409,6 +298,24 @@ mod tests {
     // }
 
     #[test]
+    fn raw_pointer_example() {
+        let mut n = 1;
+        let p = &mut n as *mut i32;
+
+        unsafe {
+            *p = 2;
+        }
+        assert_eq!(n, 2);
+
+        let mut a = [1, 2, 3, 4, 5];
+        let p = a.as_mut_ptr();
+        unsafe {
+            *p.wrapping_add(1) = 10;
+        }
+        assert_eq!(a, [1, 10, 3, 4, 5]);
+    }
+
+    #[test]
     fn box_example() {
         let b = Box::new(5);
         assert_eq!(*b, 5);
@@ -416,6 +323,17 @@ mod tests {
         let mut a = Box::new([0;100]);
         a[0] = 1;
         assert_eq!(a[0], 1);
+
+        #[allow(unused_assignments)]
+        let mut p = std::ptr::null_mut();
+        {
+            p = Box::into_raw(Box::new(10));
+        }
+        let b = unsafe {
+            *p = 11;
+            Box::from_raw(p)
+        };
+        assert_eq!(*b, 11);
     }
 }
 
