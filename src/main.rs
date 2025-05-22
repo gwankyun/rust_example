@@ -10,6 +10,10 @@ use std::io::Write;
 
 use log4rs;
 
+/// 聲明模塊
+pub mod a;
+pub mod b;
+
 /// 修改參數
 pub fn set_value<T>(num: &mut T, value: T) -> () {
     *num = value;
@@ -20,21 +24,6 @@ pub fn swap<T: Copy>(a: &mut T, b: &mut T) -> () {
     let temp = *a;
     *a = *b;
     *b = temp;
-}
-
-#[allow(dead_code)]
-struct Person {
-    age: u32,
-    sex: bool,
-    name: String,
-}
-
-impl Person {
-    /// 更新方法
-    #[cfg(test)]
-    fn grow(&mut self) {
-        self.age += 1
-    }
 }
 
 #[cfg(test)]
@@ -266,6 +255,43 @@ mod tests {
         log::info!("{str2}"); // 可以編譯
     }
 
+    fn append_string(s: &mut String, s2: String) {
+        s.push_str(s2.as_str());
+    }
+
+    #[test]
+    fn brrow_example() {
+        let mut str = String::from("Hello");
+        append_string(&mut str, String::from(", world"));
+        assert_eq!(str, "Hello, world");
+    }
+
+    #[test]
+    fn slice_example() {
+        let s = String::from("Hello, world");
+        let hello: &str = &s[0..5]; // [0..5)
+        let world = &s[7..12]; // [7..12)
+        assert_eq!(hello, "Hello");
+        assert_eq!(world, "world");
+
+        let a = [1, 2, 3, 4, 5];
+        let a012: &[i32] = &a[0..3]; // [0..3)
+        assert_eq!(a012, &[1, 2, 3]);
+    }
+
+    struct Person {
+        age: u32,
+        sex: bool,
+        name: String,
+    }
+
+    impl Person {
+        /// 更新方法
+        fn grow(&mut self) {
+            self.age += 1
+        }
+    }
+
     #[test]
     fn struct_example() {
         // 都要初始化
@@ -293,9 +319,25 @@ mod tests {
         assert_eq!(tom.age, 20);
     }
 
-    // #[test]
-    // fn lifetime_example() {
-    // }
+    #[derive(PartialEq)]
+    #[derive(Debug)]
+    struct Color(i32, i32, i32);
+    #[derive(PartialEq)]
+    #[derive(Debug)]
+    struct Point(i32, i32, i32);
+
+    #[test]
+    fn tuple_struct_example() {
+        let black = Color(0, 0, 0);
+        let origin = Point(0, 0, 0);
+
+        // 解構用的語法不一樣
+        let Point(x, y, z) = origin;
+
+        assert_eq!(black, Color(0, 0, 0));
+        assert_eq!(origin, Point(0, 0, 0));
+        assert_eq!((x, y, z), (0, 0, 0));
+    }
 
     #[test]
     fn raw_pointer_example() {
@@ -334,6 +376,102 @@ mod tests {
             Box::from_raw(p)
         };
         assert_eq!(*b, 11);
+    }
+
+    /// 自定义结构体，实现 Drop trait
+    struct CustomResource {
+        name: String,
+    }
+
+    impl Drop for CustomResource {
+        /// 当 CustomResource 实例离开作用域时自动调用此方法
+        fn drop(&mut self) {
+            println!("Cleaning up resource: {}", self.name);
+        }
+    }
+
+    #[test]
+    fn custom_drop_example() {
+        {
+            let resource = CustomResource {
+                name: String::from("Example")
+            };
+            // 当 resource 离开作用域时，Drop trait 的 drop 方法会自动被调用
+            let _ = resource;
+        }
+    }
+
+    struct Rectangle {
+        width: u32,
+        height: u32, 
+    }
+
+    impl Rectangle  {
+        fn new(width: u32, height: u32) -> Self {
+            Self { width, height } 
+        }
+
+        fn square(size: u32) -> Self {
+            Self::new(size, size)
+        }
+
+        fn area(&self) -> u32 {
+            self.width * self.height 
+        }
+    }
+
+    #[test]
+    fn impl_example() {
+        let rect = Rectangle::new(10, 20);
+        assert_eq!(rect.area(), 200);
+
+        let square = Rectangle::square(10);
+        assert_eq!(square.area(), 100);
+    }
+
+    /// 几何形状枚举
+    #[derive(Debug)]
+    enum Geometry {
+        /// 矩形，包含宽度和高度
+        Rectangle { width: f64, height: f64 },
+        /// 圆形，包含半径
+        Circle { radius: f64 },
+        /// 三角形，包含三条边的长度
+        Triangle { a: f64, b: f64, c: f64 },
+    }
+
+    impl Geometry {
+        /// 计算面积
+        fn area(&self) -> f64 {
+            match self {
+                Self::Rectangle { width, height } => width * height,
+                Self::Circle { radius } => {
+                    let pi = std::f64::consts::PI;
+                    radius * radius * pi
+                }
+                Self::Triangle { a, b, c } => {
+                    let s = (a + b + c) / 2.0;
+                    (s * (s - a) * (s - b) * (s - c)).sqrt() 
+                }
+            }
+        } 
+    }
+
+    #[test]
+    fn geometry_example() {
+        let rect = Geometry::Rectangle { width: 10.0, height: 20.0 };
+        let circle = Geometry::Circle { radius: 5.0 };
+        let triangle = Geometry::Triangle { a: 3.0, b: 4.0, c: 5.0 };
+        assert_eq!(rect.area() as i32, 200);
+        assert_eq!(circle.area() as i32, 78);
+        assert_eq!(triangle.area() as i32, 6);
+    }
+
+    #[test]
+    fn mod_example() {
+        assert_eq!(a::mod_name(), "a");
+        assert_eq!(b::mod_name(), "b");
+        assert_eq!(b::c::mod_name(), "c");
     }
 }
 
