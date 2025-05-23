@@ -5,6 +5,12 @@ pub mod test_mod {
     }
 }
 
+pub mod d {
+    pub fn mod_name() -> String {
+        String::from("d")
+    }
+}
+
 pub mod collections_example {
     // use std::collections::HashMap;
     // use std::collections::VecDeque;
@@ -44,22 +50,30 @@ pub mod collections_example {
         #[test]
         pub fn vec()
         {
-            let mut v: Vec<i32> = Vec::new();
-            v.push(1); // 增加
-            v.push(2);
-            v.push(3);
+            let mut v_with_new = Vec::new();
+            v_with_new.push(1); // 增加
+            v_with_new.push(2);
+            v_with_new.push(3);
 
-            assert_eq!(v[0], 1);
+            // 宏
+            let mut v = vec![1, 2, 3];
 
-            {
-                let mut v = vec![1, 2, 3];
-                assert_eq!(v.len(), 3);
-                v.push(4);
-                assert_eq!(v.len(), 4);
-                assert_eq!(v[3], 4);
-                v.pop(); // 移除
-                assert_eq!(v.len(), 3);
+            assert_eq!(v_with_new, v);
+
+            let mut result = 0;
+            for i in v.iter() {
+                result += i;
             }
+            assert_eq!(result, 6);
+
+            let snd = &v[1];
+            assert_eq!(*snd, 2);
+            assert_eq!(v.len(), 3);
+            v.push(4);
+            assert_eq!(v.len(), 4);
+            assert_eq!(v[3], 4);
+            v.pop(); // 移除
+            assert_eq!(v.len(), 3);
         }
 
         #[test]

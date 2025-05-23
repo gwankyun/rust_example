@@ -172,6 +172,8 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 
 #[cfg(test)]
 mod tests {
+    use rust_example::d;
+
     use super::*;
     #[test]
     fn it_works() {
@@ -472,6 +474,19 @@ mod tests {
         assert_eq!(a::mod_name(), "a");
         assert_eq!(b::mod_name(), "b");
         assert_eq!(b::c::mod_name(), "c");
+        // src/lib.rs裡的可以直接用
+        assert_eq!(d::mod_name(), "d");
+        // assert_eq!(lib:: e::mod_name(), "e");
+    }
+
+    #[test]
+    fn string_examle() {
+        let s1 = String::from("ab");
+        let s2 = String::from("cd");
+        let s3 = s1 + &s2; // 字符串拼接
+        assert_eq!(s3, "abcd");
+        let s4 = format!("{s2}{s3}"); // 字符串格式化
+        assert_eq!(s4, "cdabcd");
     }
 }
 
