@@ -405,12 +405,12 @@ mod tests {
 
     struct Rectangle {
         width: u32,
-        height: u32, 
+        height: u32,
     }
 
     impl Rectangle  {
         fn new(width: u32, height: u32) -> Self {
-            Self { width, height } 
+            Self { width, height }
         }
 
         fn square(size: u32) -> Self {
@@ -418,7 +418,7 @@ mod tests {
         }
 
         fn area(&self) -> u32 {
-            self.width * self.height 
+            self.width * self.height
         }
     }
 
@@ -453,10 +453,10 @@ mod tests {
                 }
                 Self::Triangle { a, b, c } => {
                     let s = (a + b + c) / 2.0;
-                    (s * (s - a) * (s - b) * (s - c)).sqrt() 
+                    (s * (s - a) * (s - b) * (s - c)).sqrt()
                 }
             }
-        } 
+        }
     }
 
     #[test]
