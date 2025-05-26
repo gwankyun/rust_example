@@ -88,14 +88,17 @@ pub mod collections_example {
             assert_eq!(m.len(), 3);
 
             let a = m.get("a");
-            match a {
-                None => {
-                    ();
-                }
-                Some(i) => {
-                    log::info!("{}", i);
-                }
-            }
+            assert_eq!(a, Some(1).as_ref());
+            let d = m.get("d");
+            assert_eq!(d, None.as_ref());
+
+            m.insert("b", 0);
+            assert_eq!(m.get("b"), Some(0).as_ref());
+
+            m.entry("a").or_insert(2);
+            assert_eq!(m.get("a"), Some(1).as_ref());
+            m.entry("d").or_insert(0);
+            assert_eq!(m.get("d"), Some(0).as_ref());
         }
     }
 
